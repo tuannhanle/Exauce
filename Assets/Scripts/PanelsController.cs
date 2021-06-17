@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Observer;
+
 [System.Serializable]
 public class PanelContainer
 {
@@ -13,17 +14,22 @@ public class PanelsController : MonoBehaviour
     [SerializeField] private GameObject _videoPrefab;
     [SerializeField] private PanelContainer _DecouverteContainer, _SportContainer, _DetenteContainer, _ArtContainer, _CultureContainer, _PersonalLibraryContainer;
 
+    private PersonalLibraryController personalLibraryController;
     private List<PanelContainer> panelContainers = new List<PanelContainer>();
 
     // Start is called before the first frame update
     void Start()
     {
+        personalLibraryController = _PersonalLibraryContainer.panel.GetComponent<PersonalLibraryController>();
+
         panelContainers.AddRange(new List<PanelContainer> { _DecouverteContainer, _SportContainer, _DetenteContainer, _ArtContainer, _CultureContainer, _PersonalLibraryContainer });
+       
         foreach (var panelContainer in panelContainers)
         {
             panelContainer.panel = transform.Find(panelContainer.panel.name + "/Content/List");
             this.RegisterListener(panelContainer.eventID,
                  (o) => GenerateList((List<VideoComponentDTO>)o, _videoPrefab, panelContainer.panel));
+
         }
     }
 
@@ -36,6 +42,15 @@ public class PanelsController : MonoBehaviour
             videoComponent.GetComponent<VideoComponentUI>().BindingInternalData();
         }
 
+        PersonalListException(locateTransform, videoComponentDataList);
+
+    }
+    void PersonalListException(Transform locateTransform, List<VideoComponentDTO> videoComponentDataList)
+    {
+        if (locateTransform.GetInstanceID().Equals(_PersonalLibraryContainer.panel.GetInstanceID()))
+        {
+            personalLibraryController.videoComponentDTOs = videoComponentDataList;
+        }
     }
 
     void CopyValues<T>(T from, T to)

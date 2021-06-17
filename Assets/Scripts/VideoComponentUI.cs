@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Observer;
 
+[System.Serializable]
 public class VideoComponentDTO
 {
     public string fileName { get; private set; }
