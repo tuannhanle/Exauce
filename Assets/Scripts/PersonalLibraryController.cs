@@ -11,7 +11,7 @@ public class PersonalLibraryController : MonoBehaviour
     [SerializeField] TextMeshProUGUI _notificationText;
 
     [HideInInspector]
-    public List<VideoComponentDTO> videoComponentDTOs = new List<VideoComponentDTO>();
+    public List<ParseHTML_To_DTO> videoComponentDTOs = new List<ParseHTML_To_DTO>();
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +28,7 @@ public class PersonalLibraryController : MonoBehaviour
             if (input.Equals(videoComponentDTO.fileName))
             {
                 Debug.Log(videoComponentDTO.fileName);
-                this.PostEvent(EventID.OnStreamVideo, videoComponentDTO.url);
+                this.PostEvent(EventID.OnDirFolder, videoComponentDTO.url);
             }
             else
             {

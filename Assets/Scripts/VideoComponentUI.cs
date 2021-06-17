@@ -5,18 +5,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Observer;
+using System;
 
 [System.Serializable]
-public class VideoComponentDTO
+public class ParseHTML_To_DTO
 {
     public string fileName { get; private set; }
     public string url { get; private set; }
     public string dateCreated { get; private set; }
     public string size { get; private set; }
 
-    private VideoComponentDTO() { }
+    private ParseHTML_To_DTO() { }
 
-    public VideoComponentDTO(string fileName,string url, string dateCreated, string size)
+    public ParseHTML_To_DTO(string fileName,string url, string dateCreated, string size)
     {
         this.fileName = fileName.Trim();
         this.url = url.Trim();
@@ -25,19 +26,31 @@ public class VideoComponentDTO
     }
 
 }
+public enum ButtonBoxType { Video, Folder}
 public class VideoComponentUI : MonoBehaviour
 {
-    public VideoComponentDTO videoComponentDTO { get; set; }
+    public ParseHTML_To_DTO videoComponentDTO { get; set; }
     [SerializeField] private TextMeshProUGUI _fileNameUI;
     [SerializeField] private TextMeshProUGUI _dateCreatedUI;
     [SerializeField] private TextMeshProUGUI _sizeUI;
     [SerializeField] private Button _button;
+    private ButtonBoxType _buttonBoxType;
 
     private void OnEnable()
     {
         _button.onClick.AddListener(() => {
-            this.PostEvent(EventID.OnStreamVideo, videoComponentDTO.url);
-            
+            switch (_buttonBoxType)
+            {
+                case ButtonBoxType.Video:
+                    this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO.url);
+                    break;
+                case ButtonBoxType.Folder:
+                    this.PostEvent(EventID.OnDirFolder, videoComponentDTO.url);
+                    break;
+                default:
+                    break;
+            }
+
         });
     }
 
@@ -52,6 +65,13 @@ public class VideoComponentUI : MonoBehaviour
         _sizeUI.text = videoComponentDTO.size;
     }
 
+    internal void InitType(ButtonBoxType buttonBoxType)
+    {
+        _buttonBoxType = buttonBoxType;
+    }
 
-
+    internal void Import(ParseHTML_To_DTO videoComponentData)
+    {
+        videoComponentDTO = videoComponentData;
+    }
 }

@@ -7,5 +7,7 @@
     OnListArt,
     OnListCulture,
     OnListPersonalLibrary,
-    OnStreamVideo
+    OnDirFolder,
+    OnFirstLoad,
+    OnStreamingVideo
 }

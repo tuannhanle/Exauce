@@ -24,39 +24,48 @@ public class CategoriesController : MonoBehaviour
     private CategoriesButton _DecouverteButton, _SportButton, _DetenteButton, _ArtButton, _CultureButton, _PersonalLibraryButton;
     private List<CategoriesButton> categoriesButtons = new List<CategoriesButton>();
 
+    private CategoriesButton _DefaultPanel;
 
     // Start is called before the first frame update
     void Start()
     {
-        _DecouverteButton.button.onClick.Invoke();
+        //_DefaultPanel = _DecouverteButton;
+        //_DefaultPanel.button.onClick.Invoke();
+
+
+
+        //_DecouverteButton.button.onClick.Invoke();
+
+
+        OnCategoryButtonClicked("https://data.globalvision.ch/APP/GV/Exauce/", EventID.OnFirstLoad, () => { });
     }
 
     private void OnEnable()
     {
-        categoriesButtons.AddRange(new List<CategoriesButton>() { _DecouverteButton, _SportButton, _DetenteButton, _ArtButton, _CultureButton, _PersonalLibraryButton });
+        //categoriesButtons.AddRange(new List<CategoriesButton>() { _DecouverteButton, _SportButton, _DetenteButton, _ArtButton, _CultureButton, _PersonalLibraryButton });
 
-        foreach (var categoriesButton in categoriesButtons)
-        {
-            categoriesButton.action += OnCategoryButtonClicked;
-            categoriesButton.button.onClick.AddListener(() =>
-            {
-                categoriesButton.action?.Invoke(
-                    categoriesButton.url,
-                    categoriesButton.eventID,
-                    () => categoriesButton.action -= OnCategoryButtonClicked
-                    );
+        //foreach (var categoriesButton in categoriesButtons)
+        //{
+        //    categoriesButton.action += OnCategoryButtonClicked;
+        //    categoriesButton.button.onClick.AddListener(() =>
+        //    {
+        //        categoriesButton.action?.Invoke(
+        //            categoriesButton.url,
+        //            categoriesButton.eventID,
+        //            () => categoriesButton.action -= OnCategoryButtonClicked
+        //            );
 
-            });
-        }
+        //    });
+        //}
     }
 
     private void OnDisable()
     {
-        categoriesButtons.Clear();
-        foreach (var categoriesButton in categoriesButtons)
-        {
-            categoriesButton.button.onClick.RemoveAllListeners();
-        }
+        //categoriesButtons.Clear();
+        //foreach (var categoriesButton in categoriesButtons)
+        //{
+        //    categoriesButton.button.onClick.RemoveAllListeners();
+        //}
     }
     async void OnCategoryButtonClicked(string url, EventID eventID, Action callback)
     {
@@ -75,14 +84,14 @@ public class CategoriesController : MonoBehaviour
 
     }
 
-    static async Task GetList(string url, string source, Action<List<VideoComponentDTO>> callback)
+    static async Task GetList(string url, string source, Action<List<ParseHTML_To_DTO>> callback)
     {
         var config = Configuration.Default;
         var context = BrowsingContext.New(config);
         var document = await context.OpenAsync(req => req.Content(source));
 
         var trElements = document.All.Where(tr => tr.LocalName == "tr").Skip(3).ToList();
-        var listVideoComponent = new List<VideoComponentDTO>();
+        var listVideoComponent = new List<ParseHTML_To_DTO>();
 
         foreach (var trElement in trElements)
         {
@@ -100,7 +109,7 @@ public class CategoriesController : MonoBehaviour
                         }
                     }
                 }
-                var videoComponent = new VideoComponentDTO(
+                var videoComponent = new ParseHTML_To_DTO(
                    fileName: tdElements[1].TextContent,
                    url: linkURL,
                    dateCreated: tdElements[2].TextContent,

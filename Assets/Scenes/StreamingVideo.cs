@@ -12,7 +12,7 @@ public class StreamingVideo : MonoBehaviour
 
     void Start()
     {
-        this.RegisterListener(EventID.OnStreamVideo, (o) => {
+        this.RegisterListener(EventID.OnStreamingVideo, (o) => {
             vid.url = (string)o;
             vid.Play();
         });
