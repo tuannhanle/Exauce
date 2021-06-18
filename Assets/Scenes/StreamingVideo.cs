@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 using Observer;
+using ExitGames.Client.Photon.StructWrapping;
+
 public class StreamingVideo : MonoBehaviour
 {
 
@@ -13,7 +15,7 @@ public class StreamingVideo : MonoBehaviour
     void Start()
     {
         this.RegisterListener(EventID.OnStreamingVideo, (o) => {
-            vid.url = (string)o;
+            vid.url = o.Get<ParseHTML_To_DTO>().url;
             vid.Play();
         });
 

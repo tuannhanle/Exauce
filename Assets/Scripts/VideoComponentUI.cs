@@ -26,7 +26,7 @@ public class ParseHTML_To_DTO
     }
 
 }
-public enum ButtonBoxType { Video, Folder}
+public enum VideoComponentType { Video, Caterogy}
 public class VideoComponentUI : MonoBehaviour
 {
     public ParseHTML_To_DTO videoComponentDTO { get; set; }
@@ -34,18 +34,19 @@ public class VideoComponentUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _dateCreatedUI;
     [SerializeField] private TextMeshProUGUI _sizeUI;
     [SerializeField] private Button _button;
-    private ButtonBoxType _buttonBoxType;
+    private VideoComponentType _buttonBoxType;
 
     private void OnEnable()
     {
         _button.onClick.AddListener(() => {
             switch (_buttonBoxType)
             {
-                case ButtonBoxType.Video:
-                    this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO.url);
+                case VideoComponentType.Video:
+                    this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO);
                     break;
-                case ButtonBoxType.Folder:
-                    this.PostEvent(EventID.OnDirFolder, videoComponentDTO.url);
+                case VideoComponentType.Caterogy:
+                    this.PostEvent(EventID.OnDirCaterogy, videoComponentDTO);
+
                     break;
                 default:
                     break;
@@ -64,8 +65,16 @@ public class VideoComponentUI : MonoBehaviour
         _dateCreatedUI.text = videoComponentDTO.dateCreated;
         _sizeUI.text = videoComponentDTO.size;
     }
+    
+    internal void CheckPersonalLibraryThenSelfDestroy()
+    {
+        if (videoComponentDTO.fileName== "PersonalLibrary /")
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
-    internal void InitType(ButtonBoxType buttonBoxType)
+    internal void InitType(VideoComponentType buttonBoxType)
     {
         _buttonBoxType = buttonBoxType;
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Observer;
+using ExitGames.Client.Photon.StructWrapping;
 
 namespace Michsky.UI.Zone
 {
@@ -45,10 +46,8 @@ namespace Michsky.UI.Zone
 
         void Start()
         {
-            this.RegisterListener(EventID.OnDirFolder, (o) =>
+            this.RegisterListener(EventID.OnGetVideoList, (o) =>
             {
-                Debug.Log(this.gameObject.name);
-
                 PanelAnim(2);
             });
 

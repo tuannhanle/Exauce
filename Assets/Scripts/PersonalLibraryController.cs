@@ -28,7 +28,7 @@ public class PersonalLibraryController : MonoBehaviour
             if (input.Equals(videoComponentDTO.fileName))
             {
                 Debug.Log(videoComponentDTO.fileName);
-                this.PostEvent(EventID.OnDirFolder, videoComponentDTO.url);
+                this.PostEvent(EventID.OnGetPersonalVideoList, videoComponentDTO.url);
             }
             else
             {

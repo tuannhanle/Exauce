@@ -8,6 +8,7 @@ using Observer;
 using System.Collections.Generic;
 using AngleSharp.Dom;
 using AngleSharp.Text;
+using ExitGames.Client.Photon.StructWrapping;
 
 [System.Serializable]
 public class CategoriesButton
@@ -21,56 +22,48 @@ public class CategoriesButton
 public class CategoriesController : MonoBehaviour
 {
     [SerializeField]
-    private CategoriesButton _categoriesPanel;
-    //private List<CategoriesButton> categoriesButtons = new List<CategoriesButton>();
+    private CategoriesButton _categoriesButton;
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        //_DefaultPanel = _DecouverteButton;
-        //_DefaultPanel.button.onClick.Invoke();
+        _categoriesButton.button.onClick.Invoke(); //EventID.OnGetCaterogyList
+
+        this.RegisterListener(EventID.OnDirCaterogy, (o) => {
+            var DTO = o as ParseHTML_To_DTO;
+            OnCategoryButtonClicked(DTO.url, EventID.OnGetVideoList, callback:() => { 
+                
+            });
 
 
 
-        //_DecouverteButton.button.onClick.Invoke();
+        });
 
-
-        OnCategoryButtonClicked("https://data.globalvision.ch/APP/GV/Exauce/", EventID.OnFirstLoad, () => { });
     }
 
     private void OnEnable()
     {
-        //categoriesButtons.AddRange(new List<CategoriesButton>() { _DecouverteButton, _SportButton, _DetenteButton, _ArtButton, _CultureButton, _PersonalLibraryButton });
+        _categoriesButton.action += OnCategoryButtonClicked;
+        _categoriesButton.button.onClick.AddListener(() =>
+            {
+                _categoriesButton.action?.Invoke(
+                    _categoriesButton.url,
+                    _categoriesButton.eventID,
+                    () => _categoriesButton.action -= OnCategoryButtonClicked
+                );
 
-        //foreach (var categoriesButton in categoriesButtons)
-        //{
-        //    categoriesButton.action += OnCategoryButtonClicked;
-        //    categoriesButton.button.onClick.AddListener(() =>
-        //    {
-        //        categoriesButton.action?.Invoke(
-        //            categoriesButton.url,
-        //            categoriesButton.eventID,
-        //            () => categoriesButton.action -= OnCategoryButtonClicked
-        //            );
+            });
 
-        //    });
-        //}
     }
 
     private void OnDisable()
     {
-        //categoriesButtons.Clear();
-        //foreach (var categoriesButton in categoriesButtons)
-        //{
-        //    categoriesButton.button.onClick.RemoveAllListeners();
-        //}
+        _categoriesButton.button.onClick.RemoveAllListeners();
     }
     async void OnCategoryButtonClicked(string url, EventID eventID, Action callback)
     {
         callback?.Invoke();
         await NetworkController.GetRequest(url,
-            callback: async (result) => await GetList(url,result,
+            callback: async (result) => await GetListFolder(url, result,
                 callback: async (videoComponent) =>
                 {
                     //foreach (var item in videoComponent)
@@ -83,7 +76,7 @@ public class CategoriesController : MonoBehaviour
 
     }
 
-    static async Task GetList(string url, string source, Action<List<ParseHTML_To_DTO>> callback)
+    static async Task GetListFolder(string url, string source, Action<List<ParseHTML_To_DTO>> callback)
     {
         var config = Configuration.Default;
         var context = BrowsingContext.New(config);
