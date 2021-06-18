@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Observer;
 using System;
+using UnityEditor.SearchService;
 
 [System.Serializable]
 public class ParseHTML_To_DTO
@@ -38,11 +39,15 @@ public class VideoComponentUI : MonoBehaviour
 
     private void OnEnable()
     {
+
         _button.onClick.AddListener(() => {
             switch (_buttonBoxType)
             {
                 case VideoComponentType.Video:
-                    this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO);
+                    //this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO);
+                    DataLogger.instance.DataLogged = videoComponentDTO;
+                    SceneController.instance.LoadVideoScene(SceneType.VideoPlayerScene);
+                    //DataLogger.instance.TestCastData<ParseHTML_To_DTO>();
                     break;
                 case VideoComponentType.Caterogy:
                     this.PostEvent(EventID.OnDirCaterogy, videoComponentDTO);
