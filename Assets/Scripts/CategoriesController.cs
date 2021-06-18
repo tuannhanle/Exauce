@@ -21,10 +21,9 @@ public class CategoriesButton
 public class CategoriesController : MonoBehaviour
 {
     [SerializeField]
-    private CategoriesButton _DecouverteButton, _SportButton, _DetenteButton, _ArtButton, _CultureButton, _PersonalLibraryButton;
-    private List<CategoriesButton> categoriesButtons = new List<CategoriesButton>();
+    private CategoriesButton _categoriesPanel;
+    //private List<CategoriesButton> categoriesButtons = new List<CategoriesButton>();
 
-    private CategoriesButton _DefaultPanel;
 
     // Start is called before the first frame update
     void Start()
