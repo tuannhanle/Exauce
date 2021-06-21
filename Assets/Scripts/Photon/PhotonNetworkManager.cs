@@ -4,22 +4,15 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using Core.Utilities;
 
 
 public class PhotonNetworkManager : MonoBehaviourPunCallbacks
 {
+
     private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
         ConnectToServer();
-    }
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    SendEvent.SendMoveUnitsToTargetPositionEvent();
-
-        //}
     }
 
     private void ConnectToServer()

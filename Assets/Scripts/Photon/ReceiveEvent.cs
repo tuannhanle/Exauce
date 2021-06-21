@@ -5,8 +5,9 @@ using ExitGames.Client.Photon;
 using Photon.Realtime;
 using Photon.Pun;
 using WebSocketSharp;
+using Core.Utilities;
 
-public class ReceiveEvent : MonoBehaviour, IOnEventCallback
+public class ReceiveEvent : Singleton<ReceiveEvent>, IOnEventCallback
 {
     private void OnEnable()
     {
