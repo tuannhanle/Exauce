@@ -46,6 +46,7 @@ public class VideoComponentUI : MonoBehaviour
                 case VideoComponentType.Video:
                     //this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO);
                     DataLogger.instance.DataLogged = videoComponentDTO;
+                    SendEvent.SendMessageEvent(MasterClientEventCode.OnMasterGoIntoVideo, videoComponentDTO.url);
                     SceneController.instance.LoadVideoScene(SceneType.VideoPlayerScene);
                     //DataLogger.instance.TestCastData<ParseHTML_To_DTO>();
                     break;
