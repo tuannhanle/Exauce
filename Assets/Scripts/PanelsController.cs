@@ -19,6 +19,7 @@ public class PanelsController : MonoBehaviour
 
     List<GameObject> videoList = new List<GameObject>();
     List<GameObject> panelList = new List<GameObject>();
+    List<GameObject> personalList = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,7 @@ public class PanelsController : MonoBehaviour
         //PERSONAL CASE
         personalLibraryController = _PersonalLibraryPanel.panel.GetComponent<PersonalLibraryController>();
 
-
+        // public caterogy
         _CatogoryPanel.panel = transform.Find(_CatogoryPanel.panel.name + "/Content/List");
         this.RegisterListener(_CatogoryPanel.eventID, (o) =>
         {
@@ -36,8 +37,19 @@ public class PanelsController : MonoBehaviour
 
         });
 
-        _VideoPanel.panel = transform.Find(_VideoPanel.panel.name + "/Content/List");
+        // personal Library
+        _PersonalLibraryPanel.panel = transform.Find(_PersonalLibraryPanel.panel.name + "/Content/List");
+        this.RegisterListener(_PersonalLibraryPanel.eventID, (o) =>
+        {
+            RecycleList(personalList);
+            personalList = GenerateList(o.Get<List<ParseHTML_To_DTO>>(), VideoComponentType.Video, _videoPrefab, _PersonalLibraryPanel.panel);
 
+            personalLibraryController.videoComponentDTOs = o.Get<List<ParseHTML_To_DTO>>();
+
+        });
+
+        //hidden video panel
+        _VideoPanel.panel = transform.Find(_VideoPanel.panel.name + "/Content/List");
         this.RegisterListener(_VideoPanel.eventID, (o) =>
         {
             RecycleList(videoList);
@@ -70,22 +82,14 @@ public class PanelsController : MonoBehaviour
             gameObjectList.Add(videoComponent);
         }
 
-        PersonalListException(locateTransform, videoComponentDataList);
 
         return gameObjectList;
 
     }
-    void PersonalListException(Transform locateTransform, List<ParseHTML_To_DTO> videoComponentDataList)
-    {
-        if (locateTransform.GetInstanceID().Equals(_PersonalLibraryPanel.panel.GetInstanceID()))
-        {
-            personalLibraryController.videoComponentDTOs = videoComponentDataList;
-        }
-    }
 
-    void CopyValues<T>(T from, T to)
-    {
-        var json = JsonUtility.ToJson(from);
-        JsonUtility.FromJsonOverwrite(json, to);
-    }
+    //void CopyValues<T>(T from, T to)
+    //{
+    //    var json = JsonUtility.ToJson(from);
+    //    JsonUtility.FromJsonOverwrite(json, to);
+    //}
 }

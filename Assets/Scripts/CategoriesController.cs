@@ -22,7 +22,7 @@ public class CategoriesButton
 public class CategoriesController : MonoBehaviour
 {
     [SerializeField]
-    private CategoriesButton _categoriesButton;
+    private CategoriesButton _categoriesButton, _personalLibraryButton;
 
     void Start()
     {
@@ -33,9 +33,6 @@ public class CategoriesController : MonoBehaviour
             OnCategoryButtonClicked(DTO.url, EventID.OnGetVideoList, callback:() => { 
                 
             });
-
-
-
         });
 
     }
@@ -43,6 +40,8 @@ public class CategoriesController : MonoBehaviour
     private void OnEnable()
     {
         _categoriesButton.action += OnCategoryButtonClicked;
+        _personalLibraryButton.action += OnCategoryButtonClicked;
+
         _categoriesButton.button.onClick.AddListener(() =>
             {
                 _categoriesButton.action?.Invoke(
@@ -53,6 +52,15 @@ public class CategoriesController : MonoBehaviour
 
             });
 
+        _personalLibraryButton.button.onClick.AddListener(() =>
+        {
+            _personalLibraryButton.action?.Invoke(
+                _personalLibraryButton.url,
+                _personalLibraryButton.eventID,
+                () => _personalLibraryButton.action -= OnCategoryButtonClicked
+            );
+
+        });
     }
 
     private void OnDisable()

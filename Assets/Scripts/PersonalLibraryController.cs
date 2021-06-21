@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Observer;
+using System.IO;
+using System.Text.RegularExpressions;
 public class PersonalLibraryController : MonoBehaviour
 {
     [SerializeField] TMP_InputField _InputField;
@@ -23,19 +25,22 @@ public class PersonalLibraryController : MonoBehaviour
 
     void Validator(string input)
     {
+
+        var filename = Path.GetFileNameWithoutExtension(input);
+        var inputHashCode = filename.GetHashCode();
+        Debug.Log("INPUT: " + filename);
         foreach (var videoComponentDTO in videoComponentDTOs)
         {
-            if (input.Equals(videoComponentDTO.fileName))
-            {
-                Debug.Log(videoComponentDTO.fileName);
-                this.PostEvent(EventID.OnGetPersonalVideoList, videoComponentDTO.url);
-            }
-            else
-            {
-                Debug.Log(videoComponentDTO.fileName);
+            var filenameDTO = Path.GetFileNameWithoutExtension(videoComponentDTO.fileName);
+            var videoHashCodeDTO = filenameDTO.GetHashCode();
 
-                Debug.Log(input);
+            if (inputHashCode.Equals(videoHashCodeDTO))
+            {
+                Debug.Log("TRUE : "+videoComponentDTO.fileName);
 
+                DataLogger.instance.DataLogged = videoComponentDTO;
+                SendEvent.SendMessageEvent(MasterClientEventCode.OnMasterGoIntoVideo, videoComponentDTO.url);
+                SceneController.instance.LoadVideoScene(SceneType.VideoPlayerScene);
             }
         }
     }
