@@ -9,5 +9,9 @@
     OnGetVideoList=5,
 
     OnStreamingVideo=6,
-    OnGetPersonalVideoList = 7
+    OnGetPersonalVideoList = 7,
+
+    OnMasterGoIntoVideo, OnMasterPlayVideo, OnMasterStopVideo, OnMasterPauseVideo, OnMasterExitVideo
+
+
 }
