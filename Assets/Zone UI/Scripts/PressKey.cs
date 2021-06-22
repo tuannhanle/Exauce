@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace Michsky.UI.Zone
 {
@@ -25,19 +26,19 @@ namespace Michsky.UI.Zone
         {
             if(pressAnyKey == true)
             {
-                if (Input.anyKeyDown)
+                if (Keyboard.current.anyKey.isPressed || Mouse.current.leftButton.isPressed || Mouse.current.rightButton.isPressed || Mouse.current.middleButton.isPressed)
                 {
                     pressAction.Invoke();
                 } 
             }
 
-            else
-            {
-                if (Input.GetKeyDown(hotkey))
-                {
-                    pressAction.Invoke();
-                } 
-            }
+            //else
+            //{
+            //    if (Input.GetKeyDown(hotkey))
+            //    {
+            //        pressAction.Invoke();
+            //    } 
+            //}
         }
     }
 }

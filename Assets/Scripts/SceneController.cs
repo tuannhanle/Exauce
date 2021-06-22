@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneType { MainScene, VideoPlayerScene}
+public enum SceneType { MainScene, VideoPlayerScene, Vr360Scene}
 public class SceneController : Singleton<SceneController>
 {
-    [SerializeField] string mainSceneName, videoPlayerSceneName;
+    [SerializeField] string mainSceneName, videoPlayerSceneName, vr360Scene;
 
     public void LoadVideoScene(SceneType sceneType)
     {
@@ -20,6 +20,9 @@ public class SceneController : Singleton<SceneController>
                 break;
             case SceneType.VideoPlayerScene:
                 StartCoroutine(LoadYourAsyncScene(videoPlayerSceneName));
+                break;
+            case SceneType.Vr360Scene:
+                StartCoroutine(LoadYourAsyncScene(vr360Scene));
                 break;
             default:
                 break;
