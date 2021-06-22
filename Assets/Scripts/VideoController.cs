@@ -28,10 +28,15 @@ public class VideoController : MonoBehaviour
 
         //var DTO = DataLogger.instance.DataLogged as ParseHTML_To_DTO;
         //PlayStreaming(DTO.url);
+        _meshRenderer.enabled = false;
 
         if (isTesting)
         {
             PlayStreaming("https://data.globalvision.ch/APP/GV/Exauce/D%c3%a9tente/Lama%20Tanz.mp4");
+            _audioSource.volume = 1;
+            _meshRenderer.enabled = true;
+            _videoPlayer.Play();
+
         }
     }
     private void Update()
