@@ -336,6 +336,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fc27d594a55ed443baedb62a968ae0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xRGeneralSettings: {fileID: 7127450039123945029, guid: 6bde131d3b81a334c970cb5f4171726d,
+    type: 2}
+  xRLoader: {fileID: 11400000, guid: e927bc14c3d199240a14d1b4209a441c, type: 2}
   isTestVrHeadset: 0
 --- !u!4 &1887401651
 Transform:

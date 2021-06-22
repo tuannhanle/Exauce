@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace Michsky.UI.Zone
 {
@@ -8,7 +9,6 @@ namespace Michsky.UI.Zone
     {
         [Header("KEY")]
         [SerializeField]
-        public KeyCode hotkey;
         public bool pressAnyKey;
         public bool invokeAtStart;
 
@@ -18,15 +18,22 @@ namespace Michsky.UI.Zone
 
         void Start()
         {
-            if(invokeAtStart == true)
+            
+            if (invokeAtStart == true)
                 pressAction.Invoke();
         }
-
+        private void CallSomething(Vector2 touch)
+        {
+            Debug.Log($"Touch Screen Position: {touch}");
+            var world = Camera.main.ScreenToWorldPoint(touch);
+            Debug.Log($"Touch World Position: {world}");
+            Debug.DrawLine(world, world + Vector3.one, Color.magenta, 5f);
+        }
         void Update()
         {
             if(pressAnyKey == true)
             {
-                if (Keyboard.current.anyKey.isPressed || Mouse.current.leftButton.isPressed || Mouse.current.rightButton.isPressed || Mouse.current.middleButton.isPressed)
+                if (Input.touchCount>0)
                 {
                     pressAction.Invoke();
                 } 
@@ -40,5 +47,11 @@ namespace Michsky.UI.Zone
             //    } 
             //}
         }
+        public void Pressed()
+        {
+            pressAction.Invoke();
+
+        }
     }
+
 }

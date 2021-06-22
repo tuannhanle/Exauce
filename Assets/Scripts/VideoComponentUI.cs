@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Observer;
 using System;
-using UnityEditor.SearchService;
 
 [System.Serializable]
 public class ParseHTML_To_DTO
