@@ -64,8 +64,8 @@ public class VideoController : MonoBehaviour
         _audioSource.volume = 0;
         _meshRenderer.enabled=false;
         _videoPlayer.url = link;
-        _videoPlayer.Play();
-        _videoPlayer.Stop();
+        _videoPlayer.Prepare();
+
         //SendEvent.SendOnlyEvent(MasterClientEventCode.OnMasterPlayVideo);
     }
     public void Play()

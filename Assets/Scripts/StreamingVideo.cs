@@ -71,6 +71,7 @@ public class StreamingVideo : MonoBehaviour
     private void PlayStreaming(string link)
     {
         _videoPlayer.url = link;
+        _videoPlayer.Prepare();
         _videoPlayer.Play();
         SendEvent.SendOnlyEvent(MasterClientEventCode.OnMasterPlayVideo);
     }
@@ -92,6 +93,7 @@ public class StreamingVideo : MonoBehaviour
     }
     public void BackButton()
     {
+        _videoPlayer.Stop();
         SendEvent.SendOnlyEvent(MasterClientEventCode.OnMasterExitVideo);
         SceneController.instance.LoadVideoScene(SceneType.MainScene);
     }

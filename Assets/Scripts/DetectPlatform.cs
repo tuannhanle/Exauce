@@ -14,7 +14,7 @@ public class DetectPlatform : MonoBehaviour
     {
 
 
-#if UNITY_EDITOR_WIN
+#if (UNITY_EDITOR)
         Debug.Log("UNITY EDITOR");
         if (isTestVrHeadset)
         {
@@ -30,9 +30,9 @@ public class DetectPlatform : MonoBehaviour
 
         }
 #endif
-        Debug.Log("___AWAKE___");
 
-#if UNITY_ANDROID
+#if (!UNITY_EDITOR) 
+        
         Debug.Log("UNITY_ANDROID");
 
         Debug.Log(SystemInfo.deviceName);
