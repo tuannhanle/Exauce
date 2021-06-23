@@ -10,7 +10,7 @@ namespace Michsky.UI.Zone
         [Header("KEY")]
         [SerializeField]
         public bool pressAnyKey;
-        public bool invokeAtStart;
+        static bool invokeAtStart =false;
 
         [Header("KEY ACTION")]
         [SerializeField]
@@ -33,8 +33,9 @@ namespace Michsky.UI.Zone
         {
             if(pressAnyKey == true)
             {
-                if (Input.touchCount>0)
+                if (Input.touchCount>0 || Input.GetKey(KeyCode.Mouse0))
                 {
+                    invokeAtStart = true;
                     pressAction.Invoke();
                 } 
             }

@@ -938,11 +938,11 @@ MonoBehaviour:
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
+    m_NormalTrigger: Pressed
+    m_HighlightedTrigger: Pressed
+    m_PressedTrigger: Highlighted
     m_SelectedTrigger: Highlighted
-    m_DisabledTrigger: Disabled
+    m_DisabledTrigger: Pressed
   m_Interactable: 1
   m_TargetGraphic: {fileID: 3236760416914530109}
   m_OnClick:
@@ -1198,8 +1198,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 65}
-  m_SizeDelta: {x: 0.00000011920929, y: 30}
+  m_AnchoredPosition: {x: -200, y: 65}
+  m_SizeDelta: {x: -400, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3344695557478012529
 CanvasRenderer:
@@ -1275,7 +1275,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: WATCH
+  m_text: Select
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 94db06bb99b4a054080a5b004fe36cfe, type: 2}
   m_sharedMaterial: {fileID: 21789649782560160, guid: 94db06bb99b4a054080a5b004fe36cfe,
@@ -1593,7 +1593,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: WATCH
+  m_text: Select
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 94db06bb99b4a054080a5b004fe36cfe, type: 2}
   m_sharedMaterial: {fileID: 21789649782560160, guid: 94db06bb99b4a054080a5b004fe36cfe,
