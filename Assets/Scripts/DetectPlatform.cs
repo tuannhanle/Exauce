@@ -26,7 +26,7 @@ public class DetectPlatform : MonoBehaviour
         {
 
             SceneController.instance.LoadVideoScene(SceneType.MainScene);
-
+            
 
         }
 #endif
@@ -45,18 +45,18 @@ public class DetectPlatform : MonoBehaviour
             hashDeviceName == "Quest Link".GetHashCode() )
         {
             Debug.Log("___VR HEADSET___");
-            xRGeneralSettings.Manager.loaders.Clear();
-            xRGeneralSettings.Manager.loaders.Add(xRLoader);
-            xRGeneralSettings.Manager.InitializeLoader();
-
+        
+        
+            //xRGeneralSettings.Manager.TryAddLoader(xRLoader);
+            //xRGeneralSettings.Manager.activeLoader.Initialize();
             SceneController.instance.LoadVideoScene(SceneType.Vr360Scene);
 
         }
         else
         {
-            xRGeneralSettings.Manager.loaders.Clear();
-            xRGeneralSettings.Manager.loaders.Add(xRLoader);
-            xRGeneralSettings.Manager.InitializeLoaderSync();
+            
+            //xRGeneralSettings.Manager.TryAddLoader(xRLoader);
+            //xRGeneralSettings.Manager.activeLoader.Initialize();
             Debug.Log("___MOBILE HEADSET___");
 
             SceneController.instance.LoadVideoScene(SceneType.MainScene);

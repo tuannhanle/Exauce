@@ -20,21 +20,32 @@ public class ClientManager : MonoBehaviour
     {
         this.RegisterListener(EventID.OnMasterGoIntoVideo, o => videoController.PlayStreaming(o as string));
 
-        this.RegisterListener(EventID.OnMasterPlayVideo, o => videoController.Play());
-        this.RegisterListener(EventID.OnMasterPlayVideo, o => watingRoom.SetActive(false));
+        this.RegisterListener(EventID.OnMasterPlayVideo, o => {
+            videoController.Play();
+            watingRoom.SetActive(false);
+            SetGyroscope(video360Room.transform, Camera.main.transform);
+        });
 
         this.RegisterListener(EventID.OnMasterPauseVideo, o => videoController.Pause());
 
         this.RegisterListener(EventID.OnMasterStopVideo, o => videoController.Stop());
 
-        this.RegisterListener(EventID.OnMasterExitVideo, o => videoController.Exit());
-        this.RegisterListener(EventID.OnMasterExitVideo, o => watingRoom.SetActive(true));
+        this.RegisterListener(EventID.OnMasterExitVideo, o => { 
+            videoController.Exit();
+            watingRoom.SetActive(true);
+        });
+
 
     }
 
-    // Update is called once per frame
-    void Update()
+    // obsolete
+    private void ResetGyroscope(Transform target)
     {
-        
+        target.rotation = new Quaternion();
+    }
+
+    private void SetGyroscope(Transform target, Transform refTransform)
+    {
+        target.rotation = refTransform.rotation;
     }
 }

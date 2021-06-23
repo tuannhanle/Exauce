@@ -51,6 +51,7 @@ public class VideoController : MonoBehaviour
 
     void SetUpVideoPlayer()
     {
+
         _videoPlayer.playOnAwake = false;
         _videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.RenderTexture;
         _videoPlayer.targetCamera = cam;

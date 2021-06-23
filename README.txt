@@ -1,0 +1,2 @@
+- Install android_test_mobile.apk for any android phone
+- Install android_test_oculus.apk for any vr/oculus-quest/oculus-quest-2 device.

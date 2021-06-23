@@ -28,12 +28,16 @@ public class StreamingVideo : MonoBehaviour
         SetUpVideoPlayer();
         SetUpAudioSource();
 
-        var DTO = DataLogger.instance.DataLogged as ParseHTML_To_DTO;
-        PlayStreaming(DTO.url);
+
 
         if (isTesting)
         {
-            PlayStreaming("https://data.globalvision.ch/APP/GV/Exauce/D%c3%a9tente/Lama%20Tanz.mp4");
+            PlayStreaming("https://data.globalvision.ch/APP/GV/Exauce/D%c3%a9couverte/Kh%c3%a1m%20ph%c3%a1%2015%20b%e1%ba%a5t%20ng%e1%bb%9d%20c%c3%b9ng%20LOL%20Hairgoals.mp4");
+        }
+        else
+        {
+            var DTO = DataLogger.instance.DataLogged as ParseHTML_To_DTO;
+            PlayStreaming(DTO.url);
         }
 
         //this.RegisterListener(EventID.OnStreamingVideo, (o) => {
@@ -80,6 +84,7 @@ public class StreamingVideo : MonoBehaviour
     {
         SendEvent.SendOnlyEvent(MasterClientEventCode.OnMasterPlayVideo);
         _videoPlayer.Play();
+
     }
     public void StopButton()
     {
