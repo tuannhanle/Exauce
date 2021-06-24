@@ -6,33 +6,36 @@ using Observer;
 
 public class ClientManager : MonoBehaviour
 {
-    [SerializeField] GameObject watingRoom, video360Room;
+    [SerializeField] GameObject watingRoom, video360Room, waitingLabel;
 
-    VideoController videoController;
+    UMPVRDevice uMPVRDevice;
 
     private void Awake()
     {
-        videoController = video360Room.GetComponent<VideoController>();
+        uMPVRDevice = video360Room.GetComponent<UMPVRDevice>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        this.RegisterListener(EventID.OnMasterGoIntoVideo, o => videoController.PlayStreaming(o as string));
+        this.RegisterListener(EventID.OnMasterGoIntoVideo, o => uMPVRDevice.Prepare(o as string));
 
         this.RegisterListener(EventID.OnMasterPlayVideo, o => {
-            videoController.Play();
+            uMPVRDevice.Play();
             watingRoom.SetActive(false);
+            waitingLabel.SetActive(false);
             SetGyroscope(video360Room.transform, Camera.main.transform);
         });
 
-        this.RegisterListener(EventID.OnMasterPauseVideo, o => videoController.Pause());
+        this.RegisterListener(EventID.OnMasterPauseVideo, o => uMPVRDevice.Pause());
 
-        this.RegisterListener(EventID.OnMasterStopVideo, o => videoController.Stop());
+        this.RegisterListener(EventID.OnMasterStopVideo, o => uMPVRDevice.Stop());
 
-        this.RegisterListener(EventID.OnMasterExitVideo, o => { 
-            videoController.Exit();
+        this.RegisterListener(EventID.OnMasterExitVideo, o => {
+            uMPVRDevice.Exit();
             watingRoom.SetActive(true);
+            waitingLabel.SetActive(true);
+
         });
 
 
