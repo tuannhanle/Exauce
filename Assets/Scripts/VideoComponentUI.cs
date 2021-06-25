@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Observer;
 using System;
+using System.Text;
 
 [System.Serializable]
 public class ParseHTML_To_DTO
@@ -19,12 +20,29 @@ public class ParseHTML_To_DTO
 
     public ParseHTML_To_DTO(string fileName,string url, string dateCreated, string size)
     {
-        this.fileName = fileName.Trim();
+        this.fileName = Encode(fileName.Trim());
+        //this.fileName = fileName.Trim();
         this.url = url.Trim();
         this.dateCreated = dateCreated.Trim();
         this.size = size.Trim();
     }
+    public static string Encode(string path)
+    {
+        byte[] bytes = Encoding.GetEncoding(1252).GetBytes(path);
+        return Encoding.UTF8.GetString(bytes);
+    }
+    public static string Decode(string path)
+    {
+        Char[] chars;
+        Byte[] bytes = Encoding.UTF8.GetBytes(path);
 
+        Decoder utf8Decoder = Encoding.UTF8.GetDecoder();
+
+        int charCount = utf8Decoder.GetCharCount(bytes, 0, bytes.Length);
+        chars = new Char[charCount];
+        int charsDecodedCount = utf8Decoder.GetChars(bytes, 0, bytes.Length, chars, 0);
+        return new string(chars);
+    }
 }
 public enum VideoComponentType { Video, Caterogy}
 public class VideoComponentUI : MonoBehaviour

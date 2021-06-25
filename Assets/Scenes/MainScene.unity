@@ -18347,7 +18347,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "D\xE9couverte"
+  m_text: Category
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 94db06bb99b4a054080a5b004fe36cfe, type: 2}
   m_sharedMaterial: {fileID: 21789649782560160, guid: 94db06bb99b4a054080a5b004fe36cfe,
