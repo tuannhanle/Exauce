@@ -17,6 +17,8 @@ public class PersonalLibraryController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _notificationText.text = "";
+
         _confirmButton.onClick.AddListener(() =>
         {
             Validator(_InputField.text);
@@ -37,10 +39,16 @@ public class PersonalLibraryController : MonoBehaviour
             if (inputHashCode.Equals(videoHashCodeDTO))
             {
                 Debug.Log("TRUE : "+videoComponentDTO.fileName);
-
+                _notificationText.text = "";
                 DataLogger.instance.DataLogged = videoComponentDTO;
                 SendEvent.SendMessageEvent(MasterClientEventCode.OnMasterGoIntoVideo, videoComponentDTO.url);
                 SceneController.instance.LoadVideoScene(SceneType.VideoPlayerScene);
+                break;
+            }
+            else
+            {
+                _notificationText.text = "Input is not available. \n Please try another.";
+
             }
         }
     }

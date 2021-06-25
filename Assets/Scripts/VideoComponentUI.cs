@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using Observer;
 using System;
 using System.Text;
+using Unity.Networking;
+using System.Text.RegularExpressions;
 
 [System.Serializable]
 public class ParseHTML_To_DTO
@@ -20,18 +22,23 @@ public class ParseHTML_To_DTO
 
     public ParseHTML_To_DTO(string fileName,string url, string dateCreated, string size)
     {
-        this.fileName = Encode(fileName.Trim());
+        this.fileName = RemoveInvalidChars(Encode(fileName.Trim()));
         //this.fileName = fileName.Trim();
         this.url = url.Trim();
         this.dateCreated = dateCreated.Trim();
         this.size = size.Trim();
     }
-    public static string Encode(string path)
+    public string RemoveInvalidChars(string filename)
+    {
+        return string.Concat(filename.Split(Path.GetInvalidFileNameChars()));
+    }
+
+    private static string Encode(string path)
     {
         byte[] bytes = Encoding.GetEncoding(1252).GetBytes(path);
         return Encoding.UTF8.GetString(bytes);
     }
-    public static string Decode(string path)
+    private static string Decode(string path)
     {
         Char[] chars;
         Byte[] bytes = Encoding.UTF8.GetBytes(path);
@@ -51,13 +58,38 @@ public class VideoComponentUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _fileNameUI;
     [SerializeField] private TextMeshProUGUI _dateCreatedUI;
     [SerializeField] private TextMeshProUGUI _sizeUI;
-    [SerializeField] private Button _button;
+    [SerializeField] private Button _button, _downloadButton;
     private VideoComponentType _buttonBoxType;
-
     private void OnEnable()
     {
+        _downloadButton?.onClick?.AddListener(() =>
+        {
+            _downloadButton.interactable = false;
+            string fileName = videoComponentDTO.fileName+".mp4";
+            Debug.Log(fileName);
+            var url = new Uri(videoComponentDTO.url);
+            string destinationFile = Path.Combine(Application.persistentDataPath, fileName);
+            Debug.Log("SAVE HERE: " + destinationFile);
+            Debug.Log("Download at: " + videoComponentDTO.url);
 
-        _button.onClick.AddListener(() => {
+            if (File.Exists(destinationFile))
+            {
+                Debug.Log("File already downloaded");
+                return;
+            }
+
+            var downloads = BackgroundDownload.backgroundDownloads;
+            if (downloads.Length > 0)
+                StartCoroutine(WaitForDownload(downloads[0],
+                    onDownloaded: () => {
+                        Debug.Log("Re-Start download"); }));
+            else
+            {
+                StartCoroutine(WaitForDownload(BackgroundDownload.Start(url, fileName),
+                    onDownloaded: () => Debug.Log("Done: "+ fileName)));
+            }
+        });
+        _button?.onClick?.AddListener(() => {
             switch (_buttonBoxType)
             {
                 case VideoComponentType.Video:
@@ -77,7 +109,44 @@ public class VideoComponentUI : MonoBehaviour
 
         });
     }
+    IEnumerator WaitForDownload(BackgroundDownload download, Action onDownloaded)
+    {
+        Debug.Log("Start download...");
+        yield return download;
+        while (download.status == BackgroundDownloadStatus.Downloading)
+        {
+            Debug.Log(download.status + " : " + download.progress * 100 + " %");
 
+        }
+
+        if (download.status == BackgroundDownloadStatus.Done)
+        {
+            Debug.Log("File successfully downloaded");
+            onDownloaded?.Invoke();
+        }
+        else
+            Debug.Log("File download failed with error: " + download.error);
+    }
+    IEnumerator StartDownload(string url, string fileName)
+    {
+        var destinationFile = Path.Combine(Application.persistentDataPath, fileName);
+        if (File.Exists(destinationFile))
+        {
+            Debug.Log("File already downloaded at: "+ destinationFile);
+            yield return null;
+        }
+        Debug.Log("Downloading at 1: " + url);
+
+        using (var download = BackgroundDownload.Start(new Uri(url), fileName))
+        {
+            Debug.Log("Downloading at 2: " + url);
+            yield return download;
+            if (download.status == BackgroundDownloadStatus.Failed)
+                Debug.Log(download.error);
+            else
+                Debug.Log("DONE downloading file: "+ fileName);
+        }
+    }
     private void OnDisable()
     {
         _button.onClick.RemoveAllListeners();
@@ -91,7 +160,7 @@ public class VideoComponentUI : MonoBehaviour
     
     internal void CheckPersonalLibraryThenSelfDestroy()
     {
-        if (videoComponentDTO.fileName== "PersonalLibrary /")
+        if (videoComponentDTO.fileName== "PersonalLibrary ")
         {
             Destroy(this.gameObject);
         }

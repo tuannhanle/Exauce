@@ -4,14 +4,23 @@ using UnityEngine;
 using Unity.Networking;
 using System;
 using System.IO;
+using UnityEngine.Video;
 
 public class Sandbox : MonoBehaviour
 {
+    [SerializeField] UnityEngine.Video.VideoPlayer _videoPlayer;
+    [SerializeField] AudioSource _audioSource;
+
     void Start()
     {
+        _videoPlayer.playOnAwake = false;
+        _videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        _videoPlayer.EnableAudioTrack(0, true);
+        _videoPlayer.SetTargetAudioSource(0, _audioSource);
+
         string fileName = "success.mp4";
         string destinationFile = Path.Combine(Application.persistentDataPath, fileName);
-
+        Debug.Log("SAVE HERE: " + destinationFile);
         if (File.Exists(destinationFile))
         {
             Debug.Log("File already downloaded");
@@ -37,22 +46,7 @@ public class Sandbox : MonoBehaviour
         Debug.Log("Permission result: " + permission);
 
     }
-    private IEnumerator TakeScreenshotAndSave()
-    {
-        yield return new WaitForEndOfFrame();
 
-        Texture2D ss = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-        ss.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-        ss.Apply();
-
-        // Save the screenshot to Gallery/Photos
-        NativeGallery.Permission permission = NativeGallery.SaveImageToGallery(ss, "GalleryTest", "Image.png", (success, path) => Debug.Log("Media save result: " + success + " " + path));
-
-        Debug.Log("Permission result: " + permission);
-
-        // To avoid memory leaks
-        Destroy(ss);
-    }
 
     IEnumerator WaitForDownload(BackgroundDownload download, Action onDownloaded)
     {
