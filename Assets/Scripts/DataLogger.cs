@@ -7,7 +7,7 @@ public class DataLogger : Singleton<DataLogger>
 {
 
     public object DataLogged;
- 
+    public string videoPath;
 
 
 

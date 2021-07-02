@@ -33,7 +33,7 @@ public class PanelsController : MonoBehaviour
         this.RegisterListener(_CatogoryPanel.eventID, (o) =>
         {
             RecycleList(panelList);
-            panelList = GenerateList(o.Get<List<ParseHTML_To_DTO>>(), VideoComponentType.Caterogy, _caterogyPrefab, _CatogoryPanel.panel);
+            panelList = GenerateList(o.Get<List<ParseHTML_To_DTO>>()/*, VideoComponentType.Caterogy*/, _caterogyPrefab, _CatogoryPanel.panel);
 
         });
 
@@ -42,7 +42,7 @@ public class PanelsController : MonoBehaviour
         this.RegisterListener(_PersonalLibraryPanel.eventID, (o) =>
         {
             RecycleList(personalList);
-            personalList = GenerateList(o.Get<List<ParseHTML_To_DTO>>(), VideoComponentType.Video, _videoPrefab, _PersonalLibraryPanel.panel);
+            personalList = GenerateList(o.Get<List<ParseHTML_To_DTO>>()/*, VideoComponentType.Video*/, _videoPrefab, _PersonalLibraryPanel.panel);
 
             personalLibraryController.videoComponentDTOs = o.Get<List<ParseHTML_To_DTO>>();
 
@@ -53,7 +53,7 @@ public class PanelsController : MonoBehaviour
         this.RegisterListener(_VideoPanel.eventID, (o) =>
         {
             RecycleList(videoList);
-            videoList = GenerateList(o.Get<List<ParseHTML_To_DTO>>(), VideoComponentType.Video, _videoPrefab, _VideoPanel.panel);
+            videoList = GenerateList(o.Get<List<ParseHTML_To_DTO>>()/*, VideoComponentType.Video*/, _videoPrefab, _VideoPanel.panel);
 
         });
     }
@@ -67,15 +67,16 @@ public class PanelsController : MonoBehaviour
         list.Clear();
     }
 
-    List<GameObject> GenerateList(List<ParseHTML_To_DTO> videoComponentDataList, VideoComponentType buttonBoxType, GameObject prefab, Transform locateTransform)
+    List<GameObject> GenerateList(List<ParseHTML_To_DTO> videoComponentDataList/*, VideoComponentType buttonBoxType*/, GameObject prefab, Transform locateTransform)
     {
         var gameObjectList = new List<GameObject>();
         foreach (var videoComponentData in videoComponentDataList)
         {
             var videoComponent = Instantiate<GameObject>(prefab, locateTransform);
             videoComponent.GetComponent<VideoComponentUI>().Import(videoComponentData);
-            videoComponent.GetComponent<VideoComponentUI>().InitType(buttonBoxType);
+            //videoComponent.GetComponent<VideoComponentUI>().InitType(buttonBoxType);
             videoComponent.GetComponent<VideoComponentUI>().BindingInternalData();
+            videoComponent.GetComponent<VideoComponentUI>().CheckExist();
             videoComponent.GetComponent<VideoComponentUI>().CheckPersonalLibraryThenSelfDestroy();
 
 

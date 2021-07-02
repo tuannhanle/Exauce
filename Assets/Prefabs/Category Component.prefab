@@ -1014,6 +1014,8 @@ MonoBehaviour:
   _dateCreatedUI: {fileID: 5542848400602378950}
   _sizeUI: {fileID: 3236622973969758063}
   _button: {fileID: 3234879365505271493}
+  _downloadButton: {fileID: 0}
+  _buttonBoxType: 1
 --- !u!1 &3276638294531345647
 GameObject:
   m_ObjectHideFlags: 0

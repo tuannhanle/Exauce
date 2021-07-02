@@ -20,7 +20,7 @@ public class ParseHTML_To_DTO
 
     private ParseHTML_To_DTO() { }
 
-    public ParseHTML_To_DTO(string fileName,string url, string dateCreated, string size)
+    public ParseHTML_To_DTO(string fileName, string url, string dateCreated, string size)
     {
         this.fileName = RemoveInvalidChars(Encode(fileName.Trim()));
         //this.fileName = fileName.Trim();
@@ -51,128 +51,115 @@ public class ParseHTML_To_DTO
         return new string(chars);
     }
 }
-public enum VideoComponentType { Video, Caterogy}
+public enum VideoComponentType { Video, Caterogy }
+
 public class VideoComponentUI : MonoBehaviour
 {
+    private DownloadVideoTask downloadVideoTask;
     public ParseHTML_To_DTO videoComponentDTO { get; set; }
     [SerializeField] private TextMeshProUGUI _fileNameUI;
     [SerializeField] private TextMeshProUGUI _dateCreatedUI;
     [SerializeField] private TextMeshProUGUI _sizeUI;
-    [SerializeField] private Button _button, _downloadButton;
-    private VideoComponentType _buttonBoxType;
+    [SerializeField] private Button _watchStreamButton,_watchLocalButton, _downloadMasterButton, _downloadClientButton;
+
+    [SerializeField] private VideoComponentType _buttonBoxType;
+
+    private Uri url;
+    private string fileName;
+    private string destinationFile;
+
+    private void Awake()
+    {
+        if (_buttonBoxType == VideoComponentType.Video)
+
+            downloadVideoTask = this.gameObject.AddComponent<DownloadVideoTask>();
+    }
     private void OnEnable()
     {
-        _downloadButton?.onClick?.AddListener(() =>
+        if (_buttonBoxType == VideoComponentType.Video)
         {
-            _downloadButton.interactable = false;
-            string fileName = videoComponentDTO.fileName+".mp4";
-            Debug.Log(fileName);
-            var url = new Uri(videoComponentDTO.url);
-            string destinationFile = Path.Combine(Application.persistentDataPath, fileName);
-            Debug.Log("SAVE HERE: " + destinationFile);
-            Debug.Log("Download at: " + videoComponentDTO.url);
-
-            if (File.Exists(destinationFile))
+            _downloadMasterButton?.onClick?.AddListener(() =>
             {
-                Debug.Log("File already downloaded");
-                return;
-            }
+                _downloadMasterButton.interactable = false;
+                downloadVideoTask.DownloadTask(url, fileName, (isDone) => _downloadMasterButton.interactable = !isDone);
 
-            var downloads = BackgroundDownload.backgroundDownloads;
-            if (downloads.Length > 0)
-                StartCoroutine(WaitForDownload(downloads[0],
-                    onDownloaded: () => {
-                        Debug.Log("Re-Start download"); }));
-            else
+            });
+            _watchStreamButton?.onClick?.AddListener(() =>
             {
-                StartCoroutine(WaitForDownload(BackgroundDownload.Start(url, fileName),
-                    onDownloaded: () => Debug.Log("Done: "+ fileName)));
-            }
-        });
-        _button?.onClick?.AddListener(() => {
-            switch (_buttonBoxType)
-            {
-                case VideoComponentType.Video:
-                    //this.PostEvent(EventID.OnStreamingVideo, videoComponentDTO);
-                    DataLogger.instance.DataLogged = videoComponentDTO;
-                    SendEvent.SendMessageEvent(MasterClientEventCode.OnMasterGoIntoVideo, videoComponentDTO.url);
-                    SceneController.instance.LoadVideoScene(SceneType.VideoPlayerScene);
-                    //DataLogger.instance.TestCastData<ParseHTML_To_DTO>();
-                    break;
-                case VideoComponentType.Caterogy:
-                    this.PostEvent(EventID.OnDirCaterogy, videoComponentDTO);
+                DataLogger.instance.DataLogged = videoComponentDTO;
+                DataLogger.instance.videoPath = ""; //
+                SendEvent.SendMessageEvent(MasterClientEventCode.OnMasterGoIntoVideo, videoComponentDTO.url);
+                SceneController.instance.LoadVideoScene(SceneType.VideoPlayerScene);
+            });
 
-                    break;
-                default:
-                    break;
-            }
-
-        });
-    }
-    IEnumerator WaitForDownload(BackgroundDownload download, Action onDownloaded)
-    {
-        Debug.Log("Start download...");
-        yield return download;
-        while (download.status == BackgroundDownloadStatus.Downloading)
-        {
-            Debug.Log(download.status + " : " + download.progress * 100 + " %");
-
-        }
-
-        if (download.status == BackgroundDownloadStatus.Done)
-        {
-            Debug.Log("File successfully downloaded");
-            onDownloaded?.Invoke();
         }
         else
-            Debug.Log("File download failed with error: " + download.error);
-    }
-    IEnumerator StartDownload(string url, string fileName)
-    {
-        var destinationFile = Path.Combine(Application.persistentDataPath, fileName);
-        if (File.Exists(destinationFile))
         {
-            Debug.Log("File already downloaded at: "+ destinationFile);
-            yield return null;
-        }
-        Debug.Log("Downloading at 1: " + url);
+            _watchStreamButton?.onClick?.AddListener(() => this.PostEvent(EventID.OnDirCaterogy, videoComponentDTO));
 
-        using (var download = BackgroundDownload.Start(new Uri(url), fileName))
-        {
-            Debug.Log("Downloading at 2: " + url);
-            yield return download;
-            if (download.status == BackgroundDownloadStatus.Failed)
-                Debug.Log(download.error);
-            else
-                Debug.Log("DONE downloading file: "+ fileName);
         }
+
     }
+
     private void OnDisable()
     {
-        _button.onClick.RemoveAllListeners();
+        if (_buttonBoxType == VideoComponentType.Video)
+        {
+            _downloadMasterButton.onClick.RemoveAllListeners();
+            _watchStreamButton.onClick.RemoveAllListeners();
+
+        }
+
     }
-    public void BindingInternalData()
+    internal void CheckExist()
+    {
+        if (_buttonBoxType == VideoComponentType.Video)
+
+            if (File.Exists(this.destinationFile))
+            {
+                Debug.Log("File already downloaded");
+                Debug.Log(destinationFile);
+
+                _downloadMasterButton.interactable = false;
+                return;
+            }
+            else
+            {
+                _downloadMasterButton.interactable = true;
+
+            }
+
+
+
+
+
+    }
+
+    internal void BindingInternalData()
     {
         _fileNameUI.text = videoComponentDTO.fileName;
         _dateCreatedUI.text = videoComponentDTO.dateCreated;
         _sizeUI.text = videoComponentDTO.size;
     }
-    
+
     internal void CheckPersonalLibraryThenSelfDestroy()
     {
-        if (videoComponentDTO.fileName== "PersonalLibrary ")
+        if (videoComponentDTO.fileName == "PersonalLibrary ")
         {
             Destroy(this.gameObject);
         }
     }
 
-    internal void InitType(VideoComponentType buttonBoxType)
-    {
-        _buttonBoxType = buttonBoxType;
-    }
+    //internal void InitType(VideoComponentType buttonBoxType)
+    //{
+    //    _buttonBoxType = buttonBoxType;
+    //}
 
     internal void Import(ParseHTML_To_DTO videoComponentData)
     {
         videoComponentDTO = videoComponentData;
+        fileName = videoComponentDTO.fileName + ".mp4"; //check file name chua mp4
+        url = new Uri(videoComponentDTO.url);
+        destinationFile = Path.Combine(Application.persistentDataPath, fileName);
     }
 }
